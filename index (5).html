@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>โรงพยาบาลแพทย์หญิงจรัสรวี - Dr. Charasrawee Hospital</title>
+  <link rel="manifest" href="charasrawee.json">
+  <meta name="theme-color" content="#0f172a">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --primary: #0284c7;
+      --primary-dark: #0369a1;
+      --secondary: #0d9488;
+      --danger: #e11d48;
+      --warning: #f59e0b;
+      --success: #10b981;
+      --bg-dark: #0f172a;
+      --card-bg: #1e293b;
+      --text-light: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Kanit', sans-serif; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      background: #020617;
+      color: var(--text-light);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 10px;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 1000px;
+      min-height: 92vh;
+      background: var(--bg-dark);
+      border-radius: 20px;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.7), 0 0 30px rgba(14, 165, 233, 0.15);
+      border: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Top Navigation Header */
+    header {
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      padding: 15px 25px;
+      border-bottom: 2px solid #334155;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .hospital-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .hospital-title i {
+      font-size: 28px;
+      color: #38bdf8;
+      filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.5));
+    }
+
+    .hospital-title h1 {
+      font-size: 20px;
+      font-weight: 600;
+      color: #f8fafc;
+      letter-spacing: 0.5px;
+    }
+
+    .stats-bar {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .stat-badge {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 6px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    .stat-badge i.fa-coins { color: #facc15; }
+    .stat-badge i.fa-star { color: #fbbf24; }
+
+    /* Screen Management */
+    .screen {
+      display: none;
+      flex-direction: column;
+      flex: 1;
+      padding: 25px;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .screen.active { display: flex; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Start Screen */
+    .hero-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+      border-radius: 16px;
+      padding: 30px;
+      margin-bottom: 15px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-section::before {
+      content: '';
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      background: rgba(14, 165, 233, 0.15);
+      border-radius: 50%;
+      filter: blur(80px);
+      top: -50px;
+      left: -50px;
+    }
+
+    .hospital-logo-large {
+      font-size: 80px;
+      color: #38bdf8;
+      margin-bottom: 20px;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 15px rgba(56, 189, 248, 0.4)); }
+      50% { transform: scale(1.05); filter: drop-shadow(0 0 25px rgba(56, 189, 248, 0.7)); }
+    }
+
+    .btn {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      border: none;
+      padding: 14px 32px;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 4px 15px rgba(2, 132, 199, 0.4);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(2, 132, 199, 0.6);
+    }
+
+    .btn-secondary {
+      background: linear-gradient(135deg, #475569, #334155);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, var(--secondary), #0f766e);
+      box-shadow: 0 4px 15px rgba(13, 148, 136, 0.4);
+    }
+
+    .btn-danger {
+      background: linear-gradient(135deg, var(--danger), #be123c);
+      box-shadow: 0 4px 15px rgba(225, 29, 72, 0.4);
+    }
+
+    /* Gameplay Screen Grid */
+    .game-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      flex: 1;
+    }
+
+    @media (max-width: 820px) {
+      .game-grid { grid-template-columns: 1fr; }
+      .app-container { min-height: 100vh; border-radius: 0; }
+    }
+
+    .patient-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 20px;
+      border: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .patient-header {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      background: rgba(15, 23, 42, 0.6);
+      padding: 12px;
+      border-radius: 12px;
+    }
+
+    .patient-avatar {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: #334155;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 32px;
+      color: #38bdf8;
+      border: 2px solid #0284c7;
+    }
+
+    .patient-meta h3 { font-size: 18px; color: #f8fafc; }
+    .patient-meta p { font-size: 14px; color: var(--text-muted); }
+
+    .dept-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      background: rgba(14, 165, 233, 0.2);
+      color: #38bdf8;
+      margin-top: 4px;
+    }
+
+    /* Vitals Monitor Card */
+    .vitals-monitor {
+      background: #020617;
+      border: 2px solid #1e293b;
+      border-radius: 12px;
+      padding: 15px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ecg-line {
+      width: 100%;
+      height: 40px;
+      stroke: #10b981;
+      stroke-width: 2;
+      fill: none;
+      stroke-dasharray: 1000;
+      animation: ecg 3s linear infinite;
+    }
+
+    @keyframes ecg {
+      0% { stroke-dashoffset: 1000; }
+      100% { stroke-dashoffset: 0; }
+    }
+
+    .vitals-readout {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 10px;
+    }
+
+    .vital-item {
+      text-align: center;
+    }
+
+    .vital-item span {
+      display: block;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .vital-value {
+      font-size: 26px;
+      font-weight: 700;
+      color: #10b981;
+    }
+
+    .vital-value.warning { color: var(--warning); }
+    .vital-value.danger { color: var(--danger); animation: blink 0.8s infinite; }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* Interactive Medical Q&A */
+    .treatment-area {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 20px;
+      border: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .medical-scenario {
+      background: rgba(15, 23, 42, 0.6);
+      padding: 15px;
+      border-radius: 12px;
+      border-left: 4px solid var(--primary);
+      margin-bottom: 15px;
+      line-height: 1.6;
+      font-size: 15px;
+    }
+
+    .question-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #38bdf8;
+      margin-bottom: 12px;
+    }
+
+    .options-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .option-btn {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--text-light);
+      padding: 12px 16px;
+      border-radius: 10px;
+      text-align: left;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .option-btn:hover {
+      background: rgba(14, 165, 233, 0.15);
+      border-color: #38bdf8;
+    }
+
+    .option-btn i { color: #38bdf8; }
+
+    /* Inventory Quick Access Bar */
+    .quick-inventory {
+      margin-top: 15px;
+      background: rgba(15, 23, 42, 0.8);
+      padding: 10px 15px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      overflow-x: auto;
+    }
+
+    .inv-item {
+      background: var(--card-bg);
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .inv-item:hover { border-color: var(--primary); }
+    .inv-item badge { background: var(--primary); padding: 2px 6px; border-radius: 10px; font-size: 10px; }
+
+    /* Item Shop Screen */
+    .shop-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 15px;
+      margin-top: 15px;
+      overflow-y: auto;
+      max-height: 60vh;
+      padding-right: 5px;
+    }
+
+    .shop-card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 15px;
+      border: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 10px;
+    }
+
+    .shop-card-icon {
+      font-size: 36px;
+      color: #38bdf8;
+      background: rgba(14, 165, 233, 0.1);
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .shop-card h4 { font-size: 16px; color: var(--text-light); }
+    .shop-card p { font-size: 12px; color: var(--text-muted); min-height: 36px; }
+    .shop-price { font-weight: 700; color: #facc15; font-size: 15px; }
+
+    /* Modal / Alert Overlay */
+    .overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(2, 6, 23, 0.85);
+      backdrop-filter: blur(8px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+      padding: 20px;
+    }
+
+    .modal {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 30px;
+      max-width: 450px;
+      width: 100%;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.15);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+    }
+
+    .modal i.modal-icon {
+      font-size: 60px;
+      margin-bottom: 15px;
+    }
+
+    /* Level Selector Grid */
+    .level-select-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+      gap: 10px;
+      margin-top: 15px;
+      max-height: 55vh;
+      overflow-y: auto;
+      padding: 10px;
+    }
+
+    .level-btn {
+      aspect-ratio: 1;
+      background: var(--card-bg);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .level-btn.completed { background: rgba(16, 185, 129, 0.2); border-color: var(--success); color: #34d399; }
+    .level-btn.active-level { background: var(--primary); border-color: #38bdf8; box-shadow: 0 0 10px var(--primary); }
+    .level-btn.locked { opacity: 0.4; cursor: not-allowed; }
+
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- Header Bar -->
+    <header>
+      <div class="hospital-title">
+        <i class="fa-solid fa-hospital-user"></i>
+        <div>
+          <h1>โรงพยาบาลแพทย์หญิงจรัสรวี</h1>
+          <span style="font-size: 11px; color: #94a3b8;">Dr. Charasrawee Medical Simulation</span>
+        </div>
+      </div>
+      <div class="stats-bar">
+        <div class="stat-badge"><i class="fa-solid fa-coins"></i> <span id="funds-display">500</span></div>
+        <div class="stat-badge"><i class="fa-solid fa-star"></i> <span id="score-display">0</span></div>
+      </div>
+    </header>
+
+    <!-- 1. START / MAIN MENU SCREEN -->
+    <div id="screen-start" class="screen active">
+      <div class="hero-section">
+        <div class="hospital-logo-large">
+          <i class="fa-solid fa-user-doctor"></i>
+        </div>
+        <h2 style="font-size: 28px; margin-bottom: 10px;">ระบบจำลองการรักษาผู้ป่วยทางการแพทย์</h2>
+        <p style="color: var(--text-muted); max-width: 600px; margin-bottom: 25px; font-size: 15px; line-height: 1.6;">
+          ยินดีต้อนรับสู่ศูนย์การแพทย์โรงพยาบาลแพทย์หญิงจรัสรวี คุณจะได้รับบทบาทเป็นแพทย์ผู้เชี่ยวชาญ คัดกรอง วินิจฉัย สั่งยา และทำการผ่าตัดรักษาคนไข้ตั้งแต่ระดับปฐมภูมิไปจนถึงหัตถการวิกฤต 50 ด่าน
+        </p>
+        <div style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: center;">
+          <button class="btn" onclick="Game.startLevel(Game.currentLevel)"><i class="fa-solid fa-play"></i> เริ่มเล่นเกม (ด่าน <span id="start-lvl-num">1</span>)</button>
+          <button class="btn btn-secondary" onclick="UI.showScreen('screen-levels')"><i class="fa-solid fa-list-check"></i> ด่านทั้งหมด (50)</button>
+          <button class="btn btn-success" onclick="UI.showScreen('screen-shop')"><i class="fa-solid fa-store"></i> ร้านค้าเครื่องมือแพทย์</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. LEVEL SELECT SCREEN -->
+    <div id="screen-levels" class="screen">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+        <h2><i class="fa-solid fa-hospital"></i> เลือกด่านการรักษา (1 - 50)</h2>
+        <button class="btn btn-secondary" onclick="UI.showScreen('screen-start')"><i class="fa-solid fa-house"></i> หน้าหลัก</button>
+      </div>
+      <div class="level-select-grid" id="level-grid-container"></div>
+    </div>
+
+    <!-- 3. GAMEPLAY SCREEN -->
+    <div id="screen-game" class="screen">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span class="dept-badge" id="current-dept-badge">แผนกผู้ป่วยนอก (OPD)</span>
+          <span style="font-size: 14px; color: var(--text-muted);">ด่านที่ <b id="game-level-num">1</b>/50</span>
+        </div>
+        <button class="btn btn-secondary" style="padding: 6px 14px; font-size: 13px;" onclick="UI.showScreen('screen-start')"><i class="fa-solid fa-pause"></i> พักเกม</button>
+      </div>
+
+      <div class="game-grid">
+        <!-- Left: Patient Info & Vitals -->
+        <div class="patient-card">
+          <div class="patient-header">
+            <div class="patient-avatar" id="patient-avatar-icon">
+              <i class="fa-solid fa-user-injured"></i>
+            </div>
+            <div class="patient-meta">
+              <h3 id="patient-name">คนไข้ สมชาย ใจดี</h3>
+              <p id="patient-details">เพศชาย | อายุ 45 ปี</p>
+              <span class="dept-badge" id="patient-triage" style="background: rgba(239,68,68,0.2); color: #f87171;">ระดับความรุนแรง: ปานกลาง</span>
+            </div>
+          </div>
+
+          <!-- Live ECG Monitor -->
+          <div class="vitals-monitor">
+            <div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); margin-bottom: 5px;">
+              <span><i class="fa-solid fa-heart-pulse" style="color:#e11d48;"></i> Vital Sign Monitor</span>
+              <span style="color: #10b981;">● Real-time Trace</span>
+            </div>
+            <svg class="ecg-line" viewBox="0 0 500 50">
+              <path d="M 0 25 L 100 25 L 110 10 L 120 40 L 130 5 L 140 30 L 150 25 L 500 25" />
+            </svg>
+            <div class="vitals-readout">
+              <div class="vital-item">
+                <span>อัตราการเต้นหัวใจ (HR)</span>
+                <div class="vital-value" id="hr-val">80 <small style="font-size: 12px;">bpm</small></div>
+              </div>
+              <div class="vital-item">
+                <span>ความดันโลหิต (BP)</span>
+                <div class="vital-value" id="bp-val">120/80 <small style="font-size: 12px;">mmHg</small></div>
+              </div>
+            </div>
+          </div>
+
+          <div style="font-size: 13px; color: var(--text-muted); background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px;">
+            <b>อาการแรกรับ:</b> <span id="patient-symptoms">ปวดท้องบริเวณขวาล่างเฉียบพลัน มีไข้ต่ำๆ คลื่นไส้</span>
+          </div>
+        </div>
+
+        <!-- Right: Diagnostic / Surgical Steps -->
+        <div class="treatment-area">
+          <div>
+            <div class="medical-scenario">
+              <div class="question-title"><i class="fa-solid fa-stethoscope"></i> <span id="question-text">ขั้นตอนการตรวจวิเคราะห์ที่ถูกต้องคืออะไร?</span></div>
+              <p id="question-desc" style="font-size: 13px; color: var(--text-muted);">เลือกวิธีการวินิจฉัย สั่งยา หรือหัตถการผ่าตัดที่ถูกต้องตามหลักการแพทย์</p>
+            </div>
+            <div class="options-grid" id="options-container">
+              <!-- Choices rendered via JS -->
+            </div>
+          </div>
+
+          <!-- Quick Use Inventory -->
+          <div>
+            <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 5px;"><i class="fa-solid fa-kit-medical"></i> เครื่องมือ/ยาฉุกเฉินที่มีในคลัง:</div>
+            <div class="quick-inventory" id="quick-inv-container">
+              <span style="font-size: 12px; color: var(--text-muted);">ไม่มีไอเทม (ซื้อได้จากร้านค้า)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. SHOP SCREEN -->
+    <div id="screen-shop" class="screen">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h2><i class="fa-solid fa-store" style="color: #38bdf8;"></i> ร้านค้าอุปกรณ์และยา โรงพยาบาลแพทย์หญิงจรัสรวี</h2>
+        <button class="btn btn-secondary" onclick="UI.showScreen('screen-start')"><i class="fa-solid fa-arrow-left"></i> ย้อนกลับ</button>
+      </div>
+      <p style="color: var(--text-muted); font-size: 14px; margin-top: 5px;">ซื้อไอเทมเพื่อนำไปใช้ประคับประคองสัญญาณชีพ หรือช่วยตัดตัวเลือกที่ไม่ถูกต้องในด่านผ่าตัดยากๆ</p>
+
+      <div class="shop-grid" id="shop-items-container">
+        <!-- Shop items rendered via JS -->
+      </div>
+    </div>
+
+    <!-- MODAL DIALOGS -->
+    <div class="overlay" id="modal-overlay">
+      <div class="modal" id="modal-content">
+        <!-- Modal content dynamically injected -->
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // --- PWA SERVICE WORKER REGISTRATION ---
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('charasrawee.js')
+          .then(reg => console.log('PWA ServiceWorker registered successfully.'))
+          .catch(err => console.log('ServiceWorker registration failed: ', err));
+      });
+    }
+
+    // --- GAME DATA: 50 MEDICAL LEVELS ---
+    const MEDICAL_CASES = [
+      // OPD Cases (1-10)
+      { id: 1, dept: "OPD", name: "เด็กชาย ตะวัน", age: "8 ขวบ", gender: "ชาย", avatar: "fa-child", hr: 85, bp: 110, sys: "ไข้สูง 39°C มีผื่นแดง ไอบิดเบือน ตาแดง", q: "คนไข้มีอาการสงสัยโรคหัด (Measles) ควรดำเนินการอย่างไรในขั้นตอนแรก?", opts: [{t: "แยกผู้ป่วย แยกห้องตรวจเพื่อป้องกันการแพร่เชื้อ", c: true}, {t: "สั่งผ่าตัดต่อมทอนซิลทันที", c: false}, {t: "ให้ยาแอสไพรินขนาดสูง", c: false}] },
+      { id: 2, dept: "OPD", name: "นางสมศรี สุขใจ", age: "52 ปี", gender: "หญิง", avatar: "fa-person-dress", hr: 90, bp: 145, sys: "ปัสสาวะบ่อย กระหายน้ำน้ำหนักลด", q: "ตรวจคัดกรองเบาหวานเบื้องต้น ควรส่งตรวจแล็บใด?", opts: [{t: "ตรวจระดับน้ำตาลในเลือดหลังงดอาหาร (Fasting Blood Sugar)", c: true}, {t: "ส่งทำ X-ray ปอด", c: false}, {t: "ส่องกล้องลำไส้ใหญ่", c: false}] },
+      { id: 3, dept: "OPD", name: "นายวิชัย สายชล", age: "35 ปี", gender: "ชาย", avatar: "fa-user", hr: 88, bp: 125, sys: "แสบร้อนกลางอก แน่นท้องหลังทานอาหาร", q: "สงสัยโรคกรดไหลย้อน (GERD) คำแนะนำแรกคือ?", opts: [{t: "ปรับพฤติกรรม หลีกเลี่ยงอาหารมัน นอนหลังทานอาหาร 3 ชม.", c: true}, {t: "ฉีดยาปฏิชีวนะเข้าหลอดเลือด", c: false}, {t: "ผ่าตัดกระเพาะอาหารทันที", c: false}] },
+      { id: 4, dept: "OPD", name: "นางสาวมณี รักษ์ไทย", age: "24 ปี", gender: "หญิง", avatar: "fa-user-nurse", hr: 102, bp: 115, sys: "ไข้สูง ปวดศีรษะ ปวดเมื่อยกล้ามเนื้อ ตาพร่า", q: "สงสัยไข้เลือดออก (Dengue) ห้ามให้ยาแก้ปวดชนิดใด?", opts: [{t: "แอสไพริน และ ไอบูโพรเฟน (เสี่ยงเลือดออกในกระเพาะ)", c: true}, {t: "พาราเซตามอล", c: false}, {t: "ผงเกลือแร่ ORS", c: false}] },
+      { id: 5, dept: "OPD", name: "นายสมศักดิ์ มีสุข", age: "60 ปี", gender: "ชาย", avatar: "fa-person-cane", hr: 78, bp: 165, sys: "ความดันโลหิตสูงตรวจพบจากการตรวจสุขภาพประจำปี", q: "เป้าหมายแรกในการดูแลผู้ป่วยความดันโลหิตสูงระยะเริ่มต้น?", opts: [{t: "ลดเค็ม ออกกำลังกาย ควบคุมน้ำหนัก และประเมินร่วมกับยา", c: true}, {t: "ผ่าตัดเปลี่ยนไต", c: false}, {t: "ให้รับประทานอาหารไขมันสูง", c: false}] },
+      { id: 6, dept: "OPD", name: "เด็กหญิง นภา", age: "5 ขวบ", gender: "หญิง", avatar: "fa-child-dress", hr: 110, bp: 100, sys: "อุจจาระร่วงเป็นน้ำ อาเจียน ซึม เล็กน้อย", q: "การประเมินภาวะขาดน้ำในเด็ก ควรให้การรักษาแรกเริ่มด้วยสิ่งใด?", opts: [{t: "ให้ดื่มสารน้ำแก้ท้องเสีย ORS ช้าๆ", c: true}, {t: "ให้กินยาหยุดถ่ายทันที", c: false}, {t: "ผ่าตัดลำไส้", c: false}] },
+      { id: 7, dept: "OPD", name: "นายประเสริฐ ยิ่งยง", age: "48 ปี", gender: "ชาย", avatar: "fa-user-tie", hr: 80, bp: 130, sys: "ไอเรื้อรังเกิน 3 สัปดาห์ น้ำหนักลด เหงื่อออกตอนกลางคืน", q: "สงสัยวัณโรคปอด (TB) ควรส่งตรวจสิ่งใดเป็นอันดับแรก?", opts: [{t: "ตรวจเสมหะหาเชื้อ AFB และ Chest X-ray", c: true}, {t: "เจาะไขกระดูก", c: false}, {t: "ตรวจอัลตราซาวด์ท้อง", c: false}] },
+      { id: 8, dept: "OPD", name: "นางกัญญา นิมิต", age: "41 ปี", gender: "หญิง", avatar: "fa-user-doctor", hr: 95, bp: 120, sys: "คอโต อารมณ์หงุดหงิดง่าย ขี้ร้อน น้ำหนักลดทั้งที่กินเยอะ", q: "สงสัยภาวะต่อมไทรอยด์เป็นพิษ (Hyperthyroidism) ควรตรวจค่าใด?", opts: [{t: "ตรวจระดับฮอร์โมน TSH, Free T3, Free T4", c: true}, {t: "ตรวจเอนไซม์ตับ ALT/AST", c: false}, {t: "ตรวจค่ากรดยูริก", c: false}] },
+      { id: 9, dept: "OPD", name: "นายอำนาจ พลอยก้อน", age: "55 ปี", gender: "ชาย", avatar: "fa-user", hr: 72, bp: 135, sys: "ข้อนิ้วเท้าอักเสบ ปวดบวมแดงร้อนฉับพลันหลังทานสัตว์อุจจาระ", q: "สงสัยโรคเกาต์ (Gout) ยาตัวใดใช้รักษาอาการอักเสบฉับพลัน?", opts: [{t: "Colchicine หรือ NSAIDs", c: true}, {t: "Morphine ฉีดเข้าลำไส้", c: false}, {t: "Penicillin G", c: false}] },
+      { id: 10, dept: "OPD", name: "นางจินตนา มั่งคั่ง", age: "30 ปี", gender: "หญิง", avatar: "fa-user", hr: 82, bp: 118, sys: "ปัสสาวะแสบขัด ปัสสาวะกะปริบกะปรอย", q: "กระเพาะปัสสาวะอักเสบ (UTI) การตรวจปัสสาวะมักพบสิ่งใด?", opts: [{t: "พบเม็ดเลือดขาว (WBC) และแบคทีเรียในปัสสาวะ", c: true}, {t: "พบผลึกแคลเซียมขนาดใหญ่", c: false}, {t: "พบค่าผลเลือดผิดปกติเรื้อรัง", c: false}] },
+
+      // ER Emergency Cases (11-20)
+      { id: 11, dept: "ER ฉุกเฉิน", name: "นายกิตติศักดิ์ ชัยชนะ", age: "28 ปี", gender: "ชาย", avatar: "fa-truck-medical", hr: 125, bp: 90, sys: "แน่นหน้าอก หายใจเสียงวี้ด หลังโดนผึ้งต่อยหลายตัว", q: "ผู้ป่วยมีภาวะ Anaphylaxis (แพ้รุนแรง) ยาลำดับแรกที่ต้องฉีดด่วนคือ?", opts: [{t: "Adrenaline (Epinephrine) IM เข้าต้นขา", c: true}, {t: "พาราเซตามอล เม็ด", c: false}, {t: "Dexamethasone ทาผิวหนัง", c: false}] },
+      { id: 12, dept: "ER ฉุกเฉิน", name: "นายดำรงค์ มั่นคง", age: "65 ปี", gender: "ชาย", avatar: "fa-user-slash", hr: 118, bp: 170, sys: "ปากเบี้ยว แขนขาซ้ายอ่อนแรง พูดไม่ชัด เป็นมา 1 ชั่วโมง", q: "สงสัยโรคหลอดเลือดสมองฉุกเฉิน (Stroke Fast Track) ควรส่งทำอะไรเร่งด่วน?", opts: [{t: "ทำ CT Scan สมองเพื่อดูว่ามีเลือดออกหรือสมองขาดเลือด", c: true}, {t: "ให้นอนพักผ่อนสังเกตอาการ 24 ชม.", c: false}, {t: "ให้ยาแก้ปวดหัวแล้วให้กลับบ้าน", c: false}] },
+      { id: 13, dept: "ER ฉุกเฉิน", name: "นายสมพงษ์ ยอดดี", age: "50 ปี", gender: "ชาย", avatar: "fa-heart-crack", hr: 110, bp: 150, sys: "เจ็บแน่นหน้าอกร้าวไปที่แขนซ้ายและกราม เหงื่อแตกซ่าน", q: "สงสัยกล้ามเนื้อหัวใจขาดเลือดฉุกเฉิน (STEMI) ตรวจอะไรยืนยัน?", opts: [{t: "ทำ EKG 12 leads และส่งตรวจ Trop-T/I", c: true}, {t: "อัลตราซาวด์ช่องท้อง", c: false}, {t: "X-ray กระดูกแขน", c: false}] },
+      { id: 14, dept: "ER ฉุกเฉิน", name: "เด็กชาย ป๋อง", age: "10 ขวบ", gender: "ชาย", avatar: "fa-child", hr: 130, bp: 95, sys: "หอบเหนื่อยรุนแรง พูดได้ทีละคำ ซี่โครงบุ๋ม หอบหืดกำเริบ", q: "ยาพ่นขยายหลอดลมด่วนสำหรับ Asthma Attack คือกลุ่มใด?", opts: [{t: "Salbutamol nebulizer (SABA)", c: true}, {t: "Antibiotic พ่นคอ", c: false}, {t: "Antihistamine กิน", c: false}] },
+      { id: 15, dept: "ER ฉุกเฉิน", name: "นายธนา ตั้งมั่น", age: "22 ปี", gender: "ชาย", avatar: "fa-person-falling", hr: 115, bp: 105, sys: "อุบัติเหตุรถจักรยานยนต์ กระดูกต้นขาขวาหักปิด มีอาการปวดรุนแรง", q: "การด้ามกระดูก (Splinting) ชั่วคราวมีวัตถุประสงค์หลักเพื่ออะไร?", opts: [{t: "ลดการเคลื่อนไหว ลดปวด และป้องกันเส้นเลือด/ประสาทฉีกขาด", c: true}, {t: "เพื่อรักษาให้กระดูกต่อติดกันทันที", c: false}, {t: "เพื่อผ่าตัดกระดูกโดยไม่ต้องดมยา", c: false}] },
+      { id: 16, dept: "ER ฉุกเฉิน", name: "นางสาวชลดา ฟ้าสว่าง", age: "19 ปี", gender: "หญิง", avatar: "fa-person-burst", hr: 135, bp: 85, sys: "แผลถูกฟันที่แขน เลือดพุ่งกระชูดตามจังหวะชีพจรเต้น", q: "การห้ามเลือดฉุกเฉินจากบาดแผลหลอดเลือดแดงฉีกขาดทำอย่างไร?", opts: [{t: "กดแผลโดยตรง (Direct Pressure) ด้วยผ้าสะอาดและขันเชือกถ้าจำเป็น", c: true}, {t: "เอาน้ำเย็นราดอย่างเดียว", c: false}, {t: "ทายาม่วงเบนเชียนไวโอเลต", c: false}] },
+      { id: 17, dept: "ER ฉุกเฉิน", name: "นายบุญมี เพียรทำ", age: "58 ปี", gender: "ชาย", avatar: "fa-fire-burner", hr: 120, bp: 110, sys: "ไฟไหม้ร่างกายระดับ 2 (Second degree burn) ประมาณ 30%", q: "สิ่งสำคัญที่สุดในการ resuscitation ผู้ป่วยไฟไหม้รุนแรงช่วงแรก?", opts: [{t: "ให้สารน้ำทดแทนทางหลอดเลือดดำ (IV Fluid Replacement)", c: true}, {t: "ทายาฟิวซิดินทั่วร่างกาย", c: false}, {t: "แกะถุงน้ำพองออกให้หมดทันที", c: false}] },
+      { id: 18, dept: "ER ฉุกเฉิน", name: "นายวีระชาติ ทหารกล้า", age: "40 ปี", gender: "ชาย", avatar: "fa-capsules", hr: 105, bp: 90, sys: "รับประทานยาพาราเซตามอลเกินขนาด 50 เม็ด มาภายใน 2 ชม.", q: "ยาต้านพิษ (Antidote) เฉพาะสำหรับ Paracetamol Overdose คือ?", opts: [{t: "N-acetylcysteine (NAC)", c: true}, {t: "Atropine", c: false}, {t: "Naloxone", c: false}] },
+      { id: 19, dept: "ER ฉุกเฉิน", name: "นายสมคิด จิตรดี", age: "33 ปี", gender: "ชาย", avatar: "fa-biohazard", hr: 128, bp: 80, sys: "ถูกงูเห่ากัด มีอาการหนังตาตก กลืนลำบาก หายใจลำบาก", q: "พิษงูเห่าทำลายระบบใด และควรรักษาด้วยสิ่งใด?", opts: [{t: "พิษต่อระบบประสาท (Neurotoxin) ให้เซรุ่มต้านพิษงูเห่าเฉพาะชนิด", c: true}, {t: "พิษต่อระบบกล้ามเนื้อ ให้กินยาแก้ปวด", c: false}, {t: "เอามีดกรีดแผลแล้วดูดพิษออก", c: false}] },
+      { id: 20, dept: "ER ฉุกเฉิน", name: "นายประยุทธ์ สู้ชีวิต", age: "29 ปี", gender: "ชาย", avatar: "fa-lungs-virus", hr: 140, bp: 80, sys: "อุบัติเหตุอกกระแทก หายใจขัด เสียงหายใจข้างขวาหายไป หลอดลมเบี้ยว", q: "ภาวะ Tension Pneumothorax ต้องช่วยเหลือฉุกเฉินอย่างไร?", opts: [{t: "ใช้เข็มเจาะระบายลมหน้าอก (Needle Decompression) ทันที", c: true}, {t: "ให้ดมยาสลบ", c: false}, {t: "ส่งทำ MRI สแกนอย่างละเอียด 1 ชม.", c: false}] },
+
+      // ICU Critical Cases (21-30)
+      { id: 21, dept: "ICU วิกฤต", name: "นางอารีย์ ดีเลิศ", age: "72 ปี", gender: "หญิง", avatar: "fa-bed-pulse", hr: 138, bp: 75, sys: "ติดเชื้อในกระแสเลือด (Sepsis) ความดันตก ไม่ตอบสนองต่อสารน้ำ", q: "ภาวะ Septic Shock ต้องให้ยาพยุงความดัน (Vasopressor) ตัวใดเป็นอันดับแรก?", opts: [{t: "Norepinephrine IV Drip", c: true}, {t: "Furosemide", c: false}, {t: "Insulin", c: false}] },
+      { id: 22, dept: "ICU วิกฤต", name: "นายอนันต์ ทรัพย์มาก", age: "18 ปี", gender: "ชาย", avatar: "fa-vial-virus", hr: 130, bp: 95, sys: "เบาหวานชนิดที่ 1 หายใจหอบลึก (Kussmaul) หายใจมีกลิ่นผลไม้", q: "ภาวะ Diabetic Ketoacidosis (DKA) หลักการรักษาสำคัญคือ?", opts: [{t: "ให้สารน้ำ IV Normal Saline และ Regular Insulin IV", c: true}, {t: "ให้กินน้ำตาลกลูโคสทันที", c: false}, {t: "ฉีดยาลดความดัน", c: false}] },
+      { id: 23, dept: "ICU วิกฤต", name: "นายสุรชัย ใจเย็น", age: "68 ปี", gender: "ชาย", avatar: "fa-truck-medical", hr: 122, bp: 190, sys: "ภาวะหัวใจล้มเหลวฉุกเฉิน น้ำท่วมปวด (Acute Pulmonary Edema)", q: "การลดปริมาณน้ำส่วนเกินในปอดอย่างรวดเร็วใช้ยาตัวใด?", opts: [{t: "Furosemide (ยาขับปัสสาวะ) IV", c: true}, {t: "ให้สารน้ำเกลือแร่หยดเข้าหลอดเลือดเร่งด่วน", c: false}, {t: "ให้ยาแก้ไอ", c: false}] },
+      { id: 24, dept: "ICU วิกฤต", name: "นางสาวรัตนา สุขสันต์", age: "26 ปี", gender: "หญิง", avatar: "fa-disease", hr: 145, bp: 85, sys: "ปอดอักเสบติดเชื้อโควิดรุนแรง ค่าค่าออกซิเจนในเลือด SpO2 82%", q: "ภาวะ ARDS ผู้ป่วยหายใจล้มเหลว ต้องช่วยด้วยวิธีใด?", opts: [{t: "ใส่ท่อช่วยหายใจ (Endotracheal Intubation) และใช้เครื่องช่วยหายใจ", c: true}, {t: "ให้ออกซิเจนแคนนูลา 2 ลิตร/นาที", c: false}, {t: "ให้พ่นยาขยายหลอดลมธรรมดา", c: false}] },
+      { id: 25, dept: "ICU วิกฤต", name: "นายชาญชัย มั่นใจ", age: "54 ปี", gender: "ชาย", avatar: "fa-circle-exclamation", hr: 135, bp: 210, sys: "Hypertensive Crisis ความดันสูง 210/120 ร่วมกับปวดศีรษะรุนแรง", q: "การลดความดันโลหิตในภาวะ Hypertensive Emergency ควรทำอย่างไร?", opts: [{t: "ค่อยๆ ลดความดันลงประมาณ 20-25% ในชั่วโมงแรกด้วยยาฉีด", c: true}, {t: "กดความดันให้ลงมาเหลือ 90/60 ทันทีใน 5 นาที", c: false}, {t: "ไม่ต้องทำอะไร ให้คนไข้นอนหลับ", c: false}] },
+      { id: 26, dept: "ICU วิกฤต", name: "นายประสิทธิ์ เลิศคุณ", age: "62 ปี", gender: "ชาย", avatar: "fa-wave-square", hr: 42, bp: 80, sys: "หัวใจเต้นช้ามาก (Complete Heart Block) ซึม เวียนศีรษะ", q: "การรักษาชั่วคราวฉุกเฉินสำหรับ Symptomatic Bradycardia คือ?", opts: [{t: "ให้ยา Atropine IV หรือใส่เครื่องกระตุ้นหัวใจชั่วคราว (Pacing)", c: true}, {t: "ให้ยา Adenosine IV", c: false}, {t: "ให้ยากลุ่ม Beta-Blocker", c: false}] },
+      { id: 27, dept: "ICU วิกฤต", name: "นางปรียา ลาภมาก", age: "49 ปี", gender: "หญิง", avatar: "fa-square-virus", hr: 125, bp: 100, sys: "โพแทสเซียมในเลือดสูงวิกฤต (Hyperkalemia 7.5 mEq/L) EKG มี Tall T wave", q: "ยาตัวแรกที่ต้องฉีดเพื่อป้องกันหัวใจเต้นผิดจังหวะเฉียบพลัน?", opts: [{t: "10% Calcium Gluconate IV", c: true}, {t: "Potassium Chloride IV", c: false}, {t: "Sodium Chloride Oral", c: false}] },
+      { id: 28, dept: "ICU วิกฤต", name: "นายเดชา ชาญวิทย์", age: "59 ปี", gender: "ชาย", avatar: "fa-brain", hr: 110, bp: 140, sys: "ชักต่อเนื่องไม่หยุดเกิน 5 นาที (Status Epilepticus)", q: "ยาลำดับแรกที่ต้องให้เพื่อหยุดอาการชักฉุกเฉินคือ?", opts: [{t: "Diazepam หรือ Lorazepam IV", c: true}, {t: "Paracetamol IV", c: false}, {t: "Haloperidol IM", c: false}] },
+      { id: 29, dept: "ICU วิกฤต", name: "นางสมพร ชูจิต", age: "66 ปี", gender: "หญิง", avatar: "fa-heart-circle-xmark", hr: 155, bp: 85, sys: "ลิ่มเลือดอุดตันในเส้นเลือดปอด (Massive Pulmonary Embolism)", q: "การรักษาเพื่อละลายลิ่มเลือดในผู้ป่วยวิกฤตที่มีความดันตก?", opts: [{t: "ให้ยาละลายลิ่มเลือด Thrombolytic (เช่น tPA)", c: true}, {t: "ให้ยาวิตามิน K", c: false}, {t: "ให้เกล็ดเลือดเข้มข้น", c: false}] },
+      { id: 30, dept: "ICU วิกฤต", name: "นายวินัย คล่องแคล่ว", age: "43 ปี", gender: "ชาย", avatar: "fa-skull-crossbones", hr: 0, bp: 0, sys: "ผู้ป่วยหัวใจหยุดเต้น (Cardiac Arrest) จังหวะ Ventricular Fibrillation (VF)", q: "ขั้นตอนที่ต้องทำทันทีควบคู่กับการทำ CPR คืออะไร?", opts: [{t: "ทำการกระตุกหัวใจด้วยไฟฟ้า (Defibrillation) ทันที", c: true}, {t: "ฉีดยาลดความดัน", c: false}, {t: "เจาะเลือดส่งตรวจปัสสาวะ", c: false}] },
+
+      // Surgery Cases (31-40)
+      { id: 31, dept: "ห้องผ่าตัด OR", name: "นายสมชาย เจริญ", age: "30 ปี", gender: "ชาย", avatar: "fa-scalpel", hr: 98, bp: 130, sys: "ไส้ติ่งอักเสบเฉียบพลัน (Acute Appendicitis)", q: "ตำแหน่งลงแผลผ่าตัดไส้ติ่งแบบเปิด (Open Appendectomy) เรียกว่า?", opts: [{t: "McBurney's point", c: true}, {t: "Midline incision", c: false}, {t: "Kocher incision", c: false}] },
+      { id: 32, dept: "ห้องผ่าตัด OR", name: "นางนภา พรประเสริฐ", age: "45 ปี", gender: "หญิง", avatar: "fa-scalpel-path", hr: 92, bp: 128, sys: "นิวในถุงน้ำดีอักเสบ (Acute Cholecystitis)", q: "การผ่าตัดถุงน้ำดีที่เป็นมาตรฐานหลักในปัจจุบันคือวิธีใด?", opts: [{t: "Laparoscopic Cholecystectomy (ผ่าตัดส่องกล้อง)", c: true}, {t: "ผ่าตัดเปิดท้องยาว 30 เซนติเมตร", c: false}, {t: "การฉายรังสีสลายสิว", c: false}] },
+      { id: 33, dept: "ห้องผ่าตัด OR", name: "นายอนุกูล สมานคุณ", age: "58 ปี", gender: "ชาย", avatar: "fa-person-booth", hr: 86, bp: 140, sys: "ไส้เลื่อนบริเวณขาหนีบ (Inguinal Hernia)", q: "การผ่าตัดซ่อมแซมผนังหน้าท้องไส้เลื่อนนิยมใช้อุปกรณ์ใดเสริมความแข็งแรง?", opts: [{t: "Surgical Mesh (ตะข่ายสังเคราะห์)", c: true}, {t: "แผ่นพลาสติกใส", c: false}, {t: "กาวตราช้าง", c: false}] },
+      { id: 34, dept: "ห้องผ่าตัด OR", name: "นางสาวปิยะดา สวยงาม", age: "27 ปี", gender: "หญิง", avatar: "fa-user-nurse", hr: 105, bp: 110, sys: "ฝีขนาดใหญ่บริเวณแผ่นหลัง ปวดบวมเป็นหนองรุนแรง", q: "หัตถการผ่าตัดรักษาฝีหนองเรียกว่าอะไร?", opts: [{t: "Incision and Drainage (I&D) ผ่าระบายหนอง", c: true}, {t: "Biopsy ตัดชิ้นเนื้อส่งตรวจ", c: false}, {t: "Liposuction ดูดไขมัน", c: false}] },
+      { id: 35, dept: "ห้องผ่าตัด OR", name: "นายเจษฎา ศักดิ์สิทธิ์", age: "39 ปี", gender: "ชาย", avatar: "fa-car-burst", hr: 130, bp: 80, sys: "อุบัติเหตุอุ้งเชิงกรานกระแทก ม้ามแตกเลือดออกในช่องท้องรุนแรง", q: "การผ่าตัดด่วนเพื่อหยุดเลือดในช่องท้องจากม้ามแตกคือ?", opts: [{t: "Emergency Exploratory Laparotomy และ Splenectomy", c: true}, {t: "ผ่าตัดส่องกล้องข้อเข่า", c: false}, {t: "ผ่าตัดต่อมลูกหมาก", c: false}] },
+      { id: 36, dept: "ห้องผ่าตัด OR", name: "นางสาวศิริพร เลิศล้ำ", age: "31 ปี", gender: "หญิง", avatar: "fa-baby", hr: 118, bp: 95, sys: "ตั้งครรภ์นอกมดลูกท่อนำไข่แตก (Ruptured Ectopic Pregnancy)", q: "ข้อใดคือหัตถการผ่าตัดรักษาภาวะท่อนำไข่แตก?", opts: [{t: "Sulpingectomy (ผ่าตัดปีกมดลูกข้างที่แตกออก)", c: true}, {t: "Dilation and Curettage (ขูดมดลูก)", c: false}, {t: "Cesarean Section (ผ่าคลอด)", c: false}] },
+      { id: 37, dept: "ห้องผ่าตัด OR", name: "นายกมล สุขเกษม", age: "64 ปี", gender: "ชาย", avatar: "fa-bone", hr: 90, bp: 135, sys: "กระดูกข้อสะโพกหักจากลื่นล้ม (Femoral Neck Fracture)", q: "การผ่าตัดเปลี่ยนข้อสะโพกเทียมบางส่วนเรียกว่าอะไร?", opts: [{t: "Hemiarthroplasty", c: true}, {t: "Laminectomy", c: false}, {t: "Amputation", c: false}] },
+      { id: 38, dept: "ห้องผ่าตัด OR", name: "นายทรงพล พลเดช", age: "51 ปี", gender: "ชาย", avatar: "fa-hospital-user", hr: 102, bp: 120, sys: "เนื้องอกลำไส้ใหญ่ปิดอุดตันลำไส้บางส่วน", q: "การผ่าตัดยกลำไส้มาเปิดที่หน้าท้องชั่วคราวเรียกว่า?", opts: [{t: "Colostomy", c: true}, {t: "Tracheostomy", c: false}, {t: "Gastrostomy", c: false}] },
+      { id: 39, dept: "ห้องผ่าตัด OR", name: "เด็กชาย นิว", age: "4 ขวบ", gender: "ชาย", avatar: "fa-child-reaching", hr: 125, bp: 105, sys: "เหรียญบาทติดค้างในหลอดอาหาร/ทางเดินหายใจส่วนบน", q: "อุปกรณ์ผ่าตัดส่องกล้องเพื่อคีบสิ่งแปลกปลอมออกคือ?", opts: [{t: "Rigid Bronchoscopy / Endoscopy", c: true}, {t: "Ultrasound soundwave", c: false}, {t: "Stent expansion", c: false}] },
+      { id: 40, dept: "ห้องผ่าตัด OR", name: "นายธเนศ เกียรติคุณ", age: "67 ปี", gender: "ชาย", avatar: "fa-heart-pulse", hr: 88, bp: 145, sys: "เส้นเลือดหัวใจอุดตัน 3 เส้น (Triple Vessel Disease)", q: "การผ่าตัดทำทางเบี่ยงเส้นเลือดเลี้ยงหัวใจเรียกว่า?", opts: [{t: "Coronary Artery Bypass Grafting (CABG)", c: true}, {t: "Pacemaker Implantation", c: false}, {t: "Valve Replacement", c: false}] },
+
+      // Advanced Specialist Surgery (41-50)
+      { id: 41, dept: "ผ่าตัดชั้นสูง", name: "นางดวงใจ มณีรัตน์", age: "56 ปี", gender: "หญิง", avatar: "fa-brain", hr: 110, bp: 175, sys: "เส้นเลือดโป่งพองในสมองแตก (Ruptured Brain Aneurysm)", q: "การผ่าตัดสมองเพื่อหนีบโคนเส้นเลือดโป่งพองคือหัตถการใด?", opts: [{t: "Surgical Aneurysm Clipping", c: true}, {t: "Craniotomy for Tumor", c: false}, {t: "VP Shunt", c: false}] },
+      { id: 42, dept: "ผ่าตัดชั้นสูง", name: "นายวิศรุต สุวรรณ", age: "63 ปี", gender: "ชาย", avatar: "fa-lungs", hr: 95, bp: 130, sys: "ลิ้นหัวใจเอออร์ติกตีบรุนแรง (Severe Aortic Stenosis)", q: "การเปลี่ยนลิ้นหัวใจผ่านสายน้ำโดยไม่ต้องเปิดหน้าอกเรียกว่า?", opts: [{t: "TAVI / TAVR", c: true}, {t: "Open Heart Surgery", c: false}, {t: "Ecmo installation", c: false}] },
+      { id: 43, dept: "ผ่าตัดชั้นสูง", name: "นายสมเกียรติ ยิ้มแย้ม", age: "47 ปี", gender: "ชาย", avatar: "fa-disease", hr: 84, bp: 138, sys: "ภาวะไตวายระยะสุดท้าย ได้รับบริจาคไตที่เข้ากันได้", q: "การผ่าตัดเปลี่ยนถ่ายไต (Kidney Transplantation) วางไตใหม่ไว้ที่ใด?", opts: [{t: "อุ้งเชิงกราน (Iliac Fossa)", c: true}, {t: "ตำแหน่งไตเดิมขวาล่าง", c: false}, {t: "ช่องทรวงอกข้างซ้าย", c: false}] },
+      { id: 44, dept: "ผ่าตัดชั้นสูง", name: "นางผุสดี ศรีสว่าง", age: "59 ปี", gender: "หญิง", avatar: "fa-biohazard", hr: 104, bp: 125, sys: "มะเร็งตับกลีบขวาขนาด 4 ซม. หน้าที่ตับยังทำงานได้ดี", q: "การผ่าตัดตัดเนื้อตับส่วนที่เป็นมะเร็งออกเรียกว่า?", opts: [{t: "Hepatectomy / Liver Resection", c: true}, {t: "Whipple Procedure", c: false}, {t: "Gastrectomy", c: false}] },
+      { id: 45, dept: "ผ่าตัดชั้นสูง", name: "นายเกรียงไกร มีชัย", age: "61 ปี", gender: "ชาย", avatar: "fa-heart-circle-bolt", hr: 135, bp: 195, sys: "เส้นเลือดเอออร์ตาร์ในอกฉีกขาด (Stanford Type A Aortic Dissection)", q: "การรักษาฉุกเฉินระดับสูงสุดในผู้ป่วยเอออร์ตาร์ฉีกขาดคือ?", opts: [{t: "ผ่าตัดเปิดอกเปลี่ยนใส่หลอดเลือดสังเคราะห์ด่วนที่สุด", c: true}, {t: "นอนพักทานยาแก้ปวดที่บ้าน", c: false}, {t: "ให้ยาแอสไพรินต้านเกล็ดเลือด", c: false}] },
+      { id: 46, dept: "ผ่าตัดชั้นสูง", name: "นายโชคชัย มีโชค", age: "38 ปี", gender: "ชาย", avatar: "fa-person-dots-from-line", hr: 90, bp: 132, sys: "หมอนรองกระดูกทับเส้นประสาทคอรุนแรง แขนชาสองข้าง", q: "การผ่าตัดเข้าทางด้านหน้าคอเพื่อผ่าหมอนรองกระดูกคอออกคือ?", opts: [{t: "ACDF (Anterior Cervical Discectomy and Fusion)", c: true}, {t: "Carpal Tunnel Release", c: false}, {t: "Thoracotomy", c: false}] },
+      { id: 47, dept: "ผ่าตัดชั้นสูง", name: "นางสาวนลินี สุวรรณฉาย", age: "29 ปี", gender: "หญิง", avatar: "fa-disease", hr: 122, bp: 88, sys: "มะเร็งตับอ่อนส่วนหัว อุดตันทางเดินน้ำดีและลำไส้", q: "การผ่าตัดใหญ่ทางศัลยศาสตร์ตับตับอ่อนตับอ่อนเรียกว่า?", opts: [{t: "Whipple procedure (Pancreaticoduodenectomy)", c: true}, {t: "Appendectomy", c: false}, {t: "Sleeve Gastrectomy", c: false}] },
+      { id: 48, dept: "ผ่าตัดชั้นสูง", name: "นายบุญส่ง ทรงศักดิ์", age: "70 ปี", gender: "ชาย", avatar: "fa-eye-slash", hr: 78, bp: 140, sys: "ต้อกระจกตาขวาสุกมองไม่เห็นแสง (Mature Cataract)", q: "เทคโนโลยีผ่าตัดสลายต้อกระจกด้วยคลื่นเสียงความถี่สูงเรียกว่า?", opts: [{t: "Phacoemulsification", c: true}, {t: "LASIK", c: false}, {t: "Vitrectomy", c: false}] },
+      { id: 49, dept: "ผ่าตัดชั้นสูง", name: "นายอดิศร วงศ์สว่าง", age: "25 ปี", gender: "ชาย", avatar: "fa-car-crash", hr: 145, bp: 75, sys: "อุบัติเหตุบาดเจ็บหลายระบบ (Polytrauma) เลือดออกในอกและช่องท้อง", q: "หลักการผ่าตัดควบคุมความเสียหายฉุกเฉินเรียกว่าอะไร?", opts: [{t: "Damage Control Surgery (DCS)", c: true}, {t: "Elective Cosmetic Surgery", c: false}, {t: "Reconstructive Surgery", c: false}] },
+      { id: 50, dept: "ผ่าตัดชั้นสูง", name: "ท่านผู้หญิง นวลฉวี", age: "80 ปี", gender: "หญิง", avatar: "fa-crown", hr: 110, bp: 120, sys: "ด่านสุดท้าย: มะเร็งปอดระยะเริ่มต้น ต้องการผ่าตัดส่องกล้องแผลเล็ก", q: "การผ่าตัดปอดส่องกล้องผ่านช่องอกแผลเล็กระดับสูงเรียกว่าอะไร?", opts: [{t: "VATS Lobectomy (Video-Assisted Thoracoscopic Surgery)", c: true}, {t: "Open Pneumonectomy", c: false}, {t: "Tracheostomy", c: false}] }
+    ];
+
+    // --- SHOP ITEMS SHOP DATA ---
+    const SHOP_ITEMS = [
+      { id: "bp_med", name: "ยาลดความดัน (Amlodipine)", icon: "fa-pills", price: 150, desc: "ลดความดันโลหิตของผู้ป่วยลง -20 mmHg", effect: () => Game.useBpMed() },
+      { id: "hr_med", name: "ยาควบคุมชีพจร (Beta Blocker)", icon: "fa-heart-circle-minus", price: 150, desc: "ลดอัตราการเต้นหัวใจลง -20 bpm", effect: () => Game.useHrMed() },
+      { id: "defib", name: "เครื่องกระตุกหัวใจ (AED)", icon: "fa-bolt-lightning", price: 300, desc: "ชุบชีวิตผู้ป่วยจากภาวะหัวใจล้มเหลววิกฤตได้ 1 ครั้ง", effect: () => Game.useDefib() },
+      { id: "lab_kit", name: "ชุดวินิจฉัยด่วน (Lab Fast-Kit)", icon: "fa-vial-circle-check", price: 200, desc: "ตัดตัวเลือกคำตอบผิดออก 1 ข้อทันที", effect: () => Game.useLabKit() },
+      { id: "steth_gold", name: "หูฟังทองคำหมอจรัสรวี", icon: "fa-stethoscope", price: 250, desc: "แสดงคำแนะนำคำตอบที่ถูกต้องในด่านปัจจุบัน", effect: () => Game.useHint() }
+    ];
+
+    // --- GAME ENGINE LOGIC ---
+    const Game = {
+      currentLevel: 1,
+      funds: 500,
+      score: 0,
+      hr: 80,
+      bp: 120,
+      inventory: { bp_med: 1, hr_med: 1, defib: 0, lab_kit: 1, steth_gold: 1 },
+      vitalsTimer: null,
+      activeCase: null,
+      defibUsedInLevel: false,
+
+      init() {
+        this.loadSaveData();
+        UI.renderLevelGrid();
+        UI.renderShop();
+        UI.updateHeader();
+      },
+
+      loadSaveData() {
+        const saved = localStorage.getItem('charasrawee_game_save');
+        if (saved) {
+          try {
+            const data = JSON.parse(saved);
+            this.currentLevel = data.currentLevel || 1;
+            this.funds = data.funds || 500;
+            this.score = data.score || 0;
+            this.inventory = data.inventory || this.inventory;
+          } catch(e) {}
+        }
+      },
+
+      saveData() {
+        localStorage.setItem('charasrawee_game_save', JSON.stringify({
+          currentLevel: this.currentLevel,
+          funds: this.funds,
+          score: this.score,
+          inventory: this.inventory
+        }));
+      },
+
+      startLevel(lvlNum) {
+        if (lvlNum > 50) lvlNum = 50;
+        this.currentLevel = lvlNum;
+        this.activeCase = MEDICAL_CASES.find(c => c.id === lvlNum);
+        this.hr = this.activeCase.hr;
+        this.bp = this.activeCase.bp;
+        this.defibUsedInLevel = false;
+
+        document.getElementById('start-lvl-num').innerText = this.currentLevel;
+        document.getElementById('game-level-num').innerText = this.currentLevel;
+        document.getElementById('current-dept-badge').innerText = this.activeCase.dept;
+
+        // Render Patient Info
+        document.getElementById('patient-name').innerText = this.activeCase.name;
+        document.getElementById('patient-details').innerText = `${this.activeCase.gender} | อายุ ${this.activeCase.age}`;
+        document.getElementById('patient-symptoms').innerText = this.activeCase.sys;
+        document.getElementById('patient-avatar-icon').innerHTML = `<i class="fa-solid ${this.activeCase.avatar}"></i>`;
+
+        // Render Question
+        document.getElementById('question-text').innerText = this.activeCase.q;
+        
+        // Render Options (Shuffle options)
+        const optsContainer = document.getElementById('options-container');
+        optsContainer.innerHTML = '';
+        
+        let shuffledOpts = [...this.activeCase.opts].sort(() => Math.random() - 0.5);
+        shuffledOpts.forEach((opt, idx) => {
+          const btn = document.createElement('button');
+          btn.className = 'option-btn';
+          btn.innerHTML = `<i class="fa-solid fa-circle-chevron-right"></i> <span>${opt.t}</span>`;
+          btn.onclick = () => this.handleAnswer(opt.c);
+          optsContainer.appendChild(btn);
+        });
+
+        UI.updateVitalsDisplay();
+        UI.renderQuickInventory();
+        UI.showScreen('screen-game');
+
+        // Start Vitals Ticking
+        clearInterval(this.vitalsTimer);
+        this.vitalsTimer = setInterval(() => this.tickVitals(), 1500);
+      },
+
+      tickVitals() {
+        // Random slight fluctuation
+        this.hr += Math.floor(Math.random() * 3) - 1;
+        this.bp += Math.floor(Math.random() * 3) - 1;
+        UI.updateVitalsDisplay();
+
+        // Check Critical Condition
+        if (this.hr > 150 || this.bp > 190 || this.hr < 40) {
+          if (this.inventory.defib > 0 && !this.defibUsedInLevel) {
+            this.inventory.defib--;
+            this.defibUsedInLevel = true;
+            this.hr = 90;
+            this.bp = 130;
+            UI.showModal('<i class="fa-solid fa-bolt-lightning modal-icon" style="color:#facc15;"></i><h3>AED ชุบชีวิต!</h3><p>เครื่อง AED ช่วยกระตุกหัวใจอัตโนมัติ สัญญาณชีพกลับมาคงที่อีกครั้ง</p><button class="btn" onclick="UI.closeModal()">สู้ต่อ</button>');
+            UI.renderQuickInventory();
+          } else {
+            clearInterval(this.vitalsTimer);
+            UI.showModal('<i class="fa-solid fa-skull-crossbones modal-icon" style="color:#e11d48;"></i><h3>คนไข้เสียชีวิต!</h3><p>สัญญาณชีพวิกฤตเกินขีดจำกัด การรักษาล้มเหลว คะแนนลดลง 50 คะแนน</p><button class="btn btn-danger" onclick="Game.retryLevel()">ลองใหม่อีกครั้ง</button>');
+            this.score = Math.max(0, this.score - 50);
+            UI.updateHeader();
+          }
+        }
+      },
+
+      handleAnswer(isCorrect) {
+        if (isCorrect) {
+          clearInterval(this.vitalsTimer);
+          const rewardFunds = 100 + (this.currentLevel * 10);
+          const rewardScore = 100;
+          this.funds += rewardFunds;
+          this.score += rewardScore;
+          
+          if (this.currentLevel === 50) {
+            UI.showModal(`<i class="fa-solid fa-trophy modal-icon" style="color:#facc15;"></i><h3>ยินดีด้วย! คุณสำเร็จการรักษาครบ 50 ด่าน</h3><p>คุณได้รับเกียรติยศหมอดีเด่นจากโรงพยาบาลแพทย์หญิงจรัสรวี คะแนนรวม: ${this.score}</p><button class="btn btn-success" onclick="UI.closeModal(); UI.showScreen('screen-start');">กลับหน้าหลัก</button>`);
+          } else {
+            UI.showModal(`<i class="fa-solid fa-circle-check modal-icon" style="color:#10b981;"></i><h3>รักษาถูกต้องสำเร็จ!</h3><p>คุณทำการวินิจฉัย/ผ่าตัดได้ถูกต้อง ปลอดภัย ได้รับ +${rewardFunds} เหรียญ และ +${rewardScore} คะแนน</p><button class="btn btn-success" onclick="UI.closeModal(); Game.nextLevel();">ด่านถัดไป <i class="fa-solid fa-arrow-right"></i></button>`);
+          }
+          this.saveData();
+          UI.updateHeader();
+        } else {
+          // Penalty
+          this.hr += 20;
+          this.bp += 25;
+          this.score = Math.max(0, this.score - 20);
+          UI.updateVitalsDisplay();
+          UI.updateHeader();
+          UI.showModal('<i class="fa-solid fa-triangle-exclamation modal-icon" style="color:#f59e0b;"></i><h3>ขั้นตอนไม่ถูกต้อง!</h3><p>การรักษาผิดพลาด สัญญาณชีพคนไข้แย่ลง (ชีพจรและความดันสูงขึ้นด่วน!)</p><button class="btn" onclick="UI.closeModal()">แก้ไขสถานการณ์</button>');
+        }
+      },
+
+      nextLevel() {
+        this.currentLevel++;
+        this.saveData();
+        this.startLevel(this.currentLevel);
+      },
+
+      retryLevel() {
+        UI.closeModal();
+        this.startLevel(this.currentLevel);
+      },
+
+      // ITEM EFFECTS
+      useBpMed() {
+        if (this.inventory.bp_med > 0) {
+          this.inventory.bp_med--;
+          this.bp = Math.max(90, this.bp - 25);
+          UI.updateVitalsDisplay();
+          UI.renderQuickInventory();
+        }
+      },
+
+      useHrMed() {
+        if (this.inventory.hr_med > 0) {
+          this.inventory.hr_med--;
+          this.hr = Math.max(60, this.hr - 25);
+          UI.updateVitalsDisplay();
+          UI.renderQuickInventory();
+        }
+      },
+
+      useDefib() {
+        alert("เครื่อง AED จะทำงานอัตโนมัติทันทีเมื่อสัญญาณชีพเข้าสู่ขั้นวิกฤต!");
+      },
+
+      useLabKit() {
+        if (this.inventory.lab_kit > 0) {
+          const btns = document.querySelectorAll('.option-btn');
+          let removed = false;
+          btns.forEach(btn => {
+            if (!removed && btn.innerText.indexOf(this.activeCase.opts.find(o=>o.c).t) === -1) {
+              btn.style.opacity = '0.2';
+              btn.style.pointerEvents = 'none';
+              removed = true;
+            }
+          });
+          if (removed) {
+            this.inventory.lab_kit--;
+            UI.renderQuickInventory();
+          }
+        }
+      },
+
+      useHint() {
+        if (this.inventory.steth_gold > 0) {
+          this.inventory.steth_gold--;
+          const correctText = this.activeCase.opts.find(o=>o.c).t;
+          UI.showModal(`<i class="fa-solid fa-lightbulb modal-icon" style="color:#facc15;"></i><h3>คำแนะนำจากแพทย์หญิงจรัสรวี</h3><p>คำตอบที่ถูกต้องคือ: <b>"${correctText}"</b></p><button class="btn" onclick="UI.closeModal()">เข้าใจแล้ว</button>`);
+          UI.renderQuickInventory();
+        }
+      },
+
+      buyItem(itemId) {
+        const item = SHOP_ITEMS.find(i => i.id === itemId);
+        if (this.funds >= item.price) {
+          this.funds -= item.price;
+          this.inventory[itemId] = (this.inventory[itemId] || 0) + 1;
+          this.saveData();
+          UI.updateHeader();
+          UI.renderShop();
+          UI.showModal(`<i class="fa-solid fa-bag-shopping modal-icon" style="color:#10b981;"></i><h3>ซื้อสำเร็จ!</h3><p>คุณได้รับ ${item.name} เรียบร้อยแล้ว</p><button class="btn" onclick="UI.closeModal()">ตกลง</button>`);
+        } else {
+          UI.showModal('<i class="fa-solid fa-circle-xmark modal-icon" style="color:#e11d48;"></i><h3>เหรียญไม่พอ!</h3><p>คุณต้องการเหรียญเพิ่มเติมจากการรักษาคนไข้เพื่อซื้อไอเทมนี้</p><button class="btn" onclick="UI.closeModal()">ตกลง</button>');
+        }
+      }
+    };
+
+    // --- UI RENDERER & USER INTERFACE ---
+    const UI = {
+      showScreen(screenId) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(screenId).classList.add('active');
+        if (screenId === 'screen-levels') this.renderLevelGrid();
+      },
+
+      updateHeader() {
+        document.getElementById('funds-display').innerText = Game.funds;
+        document.getElementById('score-display').innerText = Game.score;
+        document.getElementById('start-lvl-num').innerText = Game.currentLevel;
+      },
+
+      updateVitalsDisplay() {
+        const hrEl = document.getElementById('hr-val');
+        const bpEl = document.getElementById('bp-val');
+
+        hrEl.innerText = `${Game.hr} bpm`;
+        bpEl.innerText = `${Game.bp}/${Math.round(Game.bp * 0.65)} mmHg`;
+
+        // Warning Colors
+        hrEl.className = 'vital-value ' + (Game.hr > 130 || Game.hr < 50 ? 'danger' : (Game.hr > 100 ? 'warning' : ''));
+        bpEl.className = 'vital-value ' + (Game.bp > 170 || Game.bp < 80 ? 'danger' : (Game.bp > 140 ? 'warning' : ''));
+      },
+
+      renderQuickInventory() {
+        const invContainer = document.getElementById('quick-inv-container');
+        invContainer.innerHTML = '';
+
+        let hasItems = false;
+        const itemMap = [
+          { id: 'bp_med', name: 'ยาลดความดัน', icon: 'fa-pills', action: 'Game.useBpMed()' },
+          { id: 'hr_med', name: 'ยาคุมชีพจร', icon: 'fa-heart-circle-minus', action: 'Game.useHrMed()' },
+          { id: 'lab_kit', name: 'ตัดข้อผิด', icon: 'fa-vial-circle-check', action: 'Game.useLabKit()' },
+          { id: 'steth_gold', name: 'คำใบ้จรัสรวี', icon: 'fa-stethoscope', action: 'Game.useHint()' }
+        ];
+
+        itemMap.forEach(item => {
+          const count = Game.inventory[item.id] || 0;
+          if (count > 0) {
+            hasItems = true;
+            const div = document.createElement('div');
+            div.className = 'inv-item';
+            div.setAttribute('onclick', item.action);
+            div.innerHTML = `<i class="fa-solid ${item.icon}"></i> ${item.name} <span class="badge" style="background:#0284c7; padding:1px 6px; border-radius:10px; font-size:10px;">${count}</span>`;
+            invContainer.appendChild(div);
+          }
+        });
+
+        if (!hasItems) {
+          invContainer.innerHTML = '<span style="font-size: 12px; color: var(--text-muted);">ไม่มีไอเทมกดใช้ (สามารถหาซื้อได้จากร้านค้า)</span>';
+        }
+      },
+
+      renderLevelGrid() {
+        const container = document.getElementById('level-grid-container');
+        container.innerHTML = '';
+
+        for (let i = 1; i <= 50; i++) {
+          const btn = document.createElement('button');
+          btn.className = 'level-btn';
+          if (i === Game.currentLevel) btn.classList.add('active-level');
+          if (i < Game.currentLevel) btn.classList.add('completed');
+          btn.innerText = i;
+          btn.onclick = () => {
+            Game.startLevel(i);
+          };
+          container.appendChild(btn);
+        }
+      },
+
+      renderShop() {
+        const container = document.getElementById('shop-items-container');
+        container.innerHTML = '';
+
+        SHOP_ITEMS.forEach(item => {
+          const count = Game.inventory[item.id] || 0;
+          const card = document.createElement('div');
+          card.className = 'shop-card';
+          card.innerHTML = `
+            <div class="shop-card-icon"><i class="fa-solid ${item.icon}"></i></div>
+            <h4>${item.name}</h4>
+            <p>${item.desc}</p>
+            <div class="shop-price"><i class="fa-solid fa-coins"></i> ${item.price} เหรียญ</div>
+            <div style="font-size:12px; color:var(--text-muted);">มีแล้วในคลัง: <b>${count}</b> ชิ้น</div>
+            <button class="btn btn-success" style="width:100%; padding:8px;" onclick="Game.buyItem('${item.id}')">ซื้อเลย</button>
+          `;
+          container.appendChild(card);
+        });
+      },
+
+      showModal(htmlContent) {
+        document.getElementById('modal-content').innerHTML = htmlContent;
+        document.getElementById('modal-overlay').style.display = 'flex';
+      },
+
+      closeModal() {
+        document.getElementById('modal-overlay').style.display = 'none';
+      }
+    };
+
+    // Initialize Game on Load
+    window.onload = () => Game.init();
+  </script>
+</body>
+</html>

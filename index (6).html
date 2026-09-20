@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eco School Recycle</title>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:"Segoe UI",Tahoma,sans-serif;
+}
+
+body{
+    background:linear-gradient(135deg,#dcedc8,#c8e6c9,#b2dfdb);
+    min-height:100vh;
+}
+
+header{
+    background:#2e7d32;
+    color:white;
+    text-align:center;
+    padding:30px;
+    box-shadow:0 4px 12px rgba(0,0,0,.2);
+}
+
+header h1{
+    font-size:38px;
+    margin-bottom:10px;
+}
+
+header p{
+    font-size:18px;
+    opacity:.9;
+}
+
+.container{
+    width:95%;
+    max-width:1200px;
+    margin:auto;
+    margin-top:25px;
+}
+
+.card{
+    background:white;
+    border-radius:20px;
+    padding:25px;
+    margin-bottom:25px;
+    box-shadow:0 10px 25px rgba(0,0,0,.15);
+    transition:.3s;
+}
+
+.card:hover{
+    transform:translateY(-4px);
+}
+
+.card h2{
+    color:#2e7d32;
+    margin-bottom:20px;
+}
+
+.form{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    align-items: center;
+}
+
+.filter-area {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 15px;
+    background: #f1f8e9;
+    padding: 12px;
+    border-radius: 10px;
+    flex-wrap: wrap;
+}
+
+input{
+    flex:1;
+    padding:12px;
+    border-radius:10px;
+    border:1px solid #bbb;
+    outline:none;
+    font-size:16px;
+}
+
+select{
+    padding:12px;
+    border-radius:10px;
+    border:1px solid #bbb;
+    font-size:16px;
+    min-width: 150px;
+    background: white;
+    cursor: pointer;
+}
+
+button{
+    background:#43a047;
+    color:white;
+    border:none;
+    padding:12px 20px;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:15px;
+    transition:.3s;
+}
+
+button:hover{
+    background:#1b5e20;
+    transform:scale(1.05);
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    overflow:hidden;
+    border-radius:15px;
+    margin-top: 10px;
+}
+
+th{
+    background:#43a047;
+    color:white;
+    padding:15px;
+}
+
+td{
+    padding:12px;
+    border-bottom:1px solid #ddd;
+    text-align:center;
+}
+
+tr:nth-child(even){
+    background:#f7f7f7;
+}
+
+tr:hover{
+    background:#e8f5e9;
+}
+
+#rewardList{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:15px;
+}
+
+#rewardList div{
+    background:#f1f8e9;
+    border-left:6px solid #4caf50;
+    padding:15px;
+    border-radius:12px;
+    font-size:17px;
+    transition:.3s;
+}
+
+#rewardList div:hover{
+    transform:translateY(-5px);
+}
+
+.actionBtn{
+    margin:3px;
+    padding:8px 12px;
+    border-radius:8px;
+}
+
+.blue{ background:#2196f3; }
+.red{ background:#e53935; }
+.orange{ background:#fb8c00; }
+.purple{ background:#8e24aa; }
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+.modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+.reward-select-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 20px;
+}
+.reward-btn {
+    background: #e8f5e9;
+    color: #2e7d32;
+    padding: 12px;
+    border: 2px solid #a5d6a7;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.2s;
+}
+.reward-btn:hover {
+    background: #a5d6a7;
+    color: white;
+}
+.close-btn {
+    background: #757575;
+    margin-top: 15px;
+    width: 100%;
+}
+
+.sync-status {
+    font-size: 14px;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+@media(max-width:768px){
+    header h1{ font-size:28px; }
+    .form{ flex-direction:column; }
+    button{ width:100%; }
+    table{ font-size:13px; }
+    .filter-area { flex-direction: column; align-items: stretch; }
+}
+
+.card{ animation:fade .7s; }
+@keyframes fade{
+    from{ opacity:0; transform:translateY(30px); }
+    to{ opacity:1; transform:translateY(0); }
+}
+
+::-webkit-scrollbar{ width:10px; }
+::-webkit-scrollbar-thumb{ background:#4caf50; border-radius:20px; }
+::-webkit-scrollbar-track{ background:#eee; }
+</style>
+
+</head>
+<body>
+
+<header>
+    <h1>♻️ ระบบขยะรีไซเคิลแลกแต้ม</h1>
+    <p>สะสมแต้มจากการรีไซเคิล แลกอุปกรณ์การเรียน</p>
+</header>
+
+<div class="container">
+
+    <div class="card">
+        <h2>เพิ่มสมาชิก</h2>
+        <div class="form">
+            <select id="roomSelect">
+                <option value="">เลือกห้องเรียน</option>
+            </select>
+            <input type="text" id="studentName" placeholder="ชื่อนักเรียน">
+            <button onclick="addStudent()">เพิ่มสมาชิก</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>รายชื่อนักเรียน (จัดการแต้มคะแนน)</h2>
+        
+        <div class="filter-area">
+            <label for="studentRoomFilter" style="font-weight: bold; color: #2e7d32;">🔍 ค้นหา:</label>
+            <select id="studentRoomFilter" onchange="showStudents()">
+                <option value="all">แสดงทุกห้อง</option>
+            </select>
+            <input type="text" id="studentNameSearch" placeholder="พิมพ์ชื่อนักเรียนเพื่อค้นหา..." oninput="showStudents()">
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ห้อง</th>
+                    <th>ชื่อ</th>
+                    <th>🧴 ขวด (1 แต้ม)</th>
+                    <th>🥫 กระป๋อง (3 แต้ม)</th>
+                    <th>⭐ แต้มคงเหลือ</th>
+                    <th>จัดการ</th>
+                </tr>
+            </thead>
+            <tbody id="studentTable"></tbody>
+        </table>
+    </div>
+
+    <div class="card">
+        <h2>🎁 เกณฑ์การแลกของรางวัล</h2>
+        <div id="rewardList">
+            <div>🖊️ ปากกาน้ำเงิน 30 แต้ม</div>
+            <div>🖊️ ปากกาแดง 30 แต้ม</div>
+            <div>📏 ไม้บรรทัด 30 แต้ม</div>
+            <div>🧽 ยางลบ 30 แต้ม</div>
+            <div>✏️ ดินสอ 30 แต้ม</div>
+            <div>🪒 กบเหลา 30 แต้ม</div>
+            <div>📒 สมุดเล็ก 60 แต้ม</div>
+            <div>🧴 ลิควิด 90 แต้ม</div>
+            <div>📘 สมุดใหญ่ 120 แต้ม</div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>📜 ประวัติการแลกของรางวัล</h2>
+        
+        <div class="filter-area">
+            <label for="historyRoomFilter" style="font-weight: bold; color: #2e7d32;">🔍 ค้นหา:</label>
+            <select id="historyRoomFilter" onchange="showHistory()">
+                <option value="all">แสดงทุกห้อง</option>
+            </select>
+            <input type="text" id="historyNameSearch" placeholder="พิมพ์ชื่อนักเรียนเพื่อค้นหาประวัติ..." oninput="showHistory()">
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>วัน-เวลาที่แลก</th>
+                    <th>ห้อง</th>
+                    <th>ชื่อนักเรียน</th>
+                    <th>ของรางวัลที่แลก</th>
+                    <th>แต้มที่ใช้</th>
+                </tr>
+            </thead>
+            <tbody id="historyTable">
+                <tr><td colspan="5">ยังไม่มีประวัติการแลกรางวัล</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card">
+        <h2>💾 จัดการและสำรองข้อมูล</h2>
+        <p style="margin-bottom: 15px; color: #555;">ข้อมูลจะซิงค์อัตโนมัติทุกเครื่องในเวลาเดียวกัน หากต้องการไฟล์สำรองสามารถดาวน์โหลดได้ที่นี่</p>
+        <div class="form">
+            <button onclick="exportData()" class="orange">📥 ดาวน์โหลดไฟล์สำรองข้อมูล (JSON)</button>
+            <button onclick="document.getElementById('importFile').click()" style="background:#8e24aa;">📤 นำเข้าไฟล์สำรอง (Import JSON)</button>
+            <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+        </div>
+        <p id="syncStatus" class="sync-status" style="color:#2e7d32; margin-top:10px;">⚪ กำลังโหลดข้อมูล...</p>
+    </div>
+
+</div>
+
+<div id="rewardModal" class="modal">
+    <div class="modal-content">
+        <h3 id="modalTitle">เลือกของรางวัล</h3>
+        <p style="margin-top: 5px; color: #666;">แต้มคงเหลือ: <span id="currentPoints" style="font-weight: bold; color: #2e7d32;">0</span> แต้ม</p>
+        <div class="reward-select-grid" id="rewardSelectGrid"></div>
+        <button class="close-btn" onclick="closeModal()">ยกเลิก</button>
+    </div>
+</div>
+
+<script>
+// ==============================================================
+// 📌 จุดเดียวที่ต้องแก้: คัดลอกข้อมูลจาก Firebase Console มาใส่ตรงนี้
+// ==============================================================
+const firebaseConfig = {
+  apiKey: "AIzaSyAiTXXaNeo5Rk4XrUCUYeR9sNMSi-Tkf5U",
+  authDomain: "school-project-b0350.firebaseapp.com",
+  projectId: "school-project-b0350",
+  storageBucket: "school-project-b0350.firebasestorage.app",
+  messagingSenderId: "1064052484109",
+  appId: "1:1064052484109:web:1ea6e6cde8103d23e2cd44",
+  measurementId: "G-DKPZZ3L059"
+};// ==============================================================
+
+let db = null;
+try {
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
+    db = firebase.database();
+} catch(e) {
+    console.warn("⚠️ ยังไม่ได้ตั้งค่า Firebase หรือ Config ไม่ถูกต้อง: ", e.message);
+}
+
+const rooms = [
+    "ม.1/1","ม.1/2","ม.1/3",
+    "ม.2/1","ม.2/2","ม.2/3",
+    "ม.3/1","ม.3/2","ม.3/3","ม.3/4",
+    "ม.4/1","ม.4/2","ม.4/3",
+    "ม.5/1","ม.5/2","ม.5/3",
+    "ม.6/1","ม.6/2","ม.6/3"
+];
+
+const rewards = [
+    { name: "🖊️ ปากกาน้ำเงิน", cost: 30 },
+    { name: "🖊️ ปากกาแดง", cost: 30 },
+    { name: "📏 ไม้บรรทัด", cost: 30 },
+    { name: "🧽 ยางลบ", cost: 30 },
+    { name: "✏️ ดินสอ", cost: 30 },
+    { name: "🪒 กบเหลา", cost: 30 },
+    { name: "📒 สมุดเล็ก", cost: 60 },
+    { name: "🧴 ลิควิด", cost: 90 },
+    { name: "📘 สมุดใหญ่", cost: 120 }
+];
+
+let students = [];
+let historyLogs = [];
+let activeStudentIndex = null;
+
+function saveData() {
+    localStorage.setItem("students", JSON.stringify(students));
+    localStorage.setItem("historyLogs", JSON.stringify(historyLogs));
+
+    showStudents();
+    showHistory();
+
+    const statusEl = document.getElementById("syncStatus");
+    if (db) {
+        statusEl.textContent = "🟡 กำลังซิงค์ข้อมูลไปยังคลาวด์...";
+        db.ref("eco_school_data").set({
+            students: students,
+            historyLogs: historyLogs
+        }).then(() => {
+            statusEl.textContent = "🟢 ข้อมูลตรงกันล่าสุด (ซิงค์เรียบร้อย)";
+        }).catch(err => {
+            statusEl.textContent = "❌ ซิงค์ไม่สำเร็จ: " + err.message;
+            console.error("Firebase Error: ", err);
+        });
+    } else {
+        statusEl.textContent = "🔴 ใช้งานโหมดออฟไลน์ (ยังไม่ได้ตั้งค่า Firebase)";
+    }
+}
+
+function initRealtimeSync() {
+    const statusEl = document.getElementById("syncStatus");
+    if (!db) {
+        loadLocalData();
+        showStudents();
+        showHistory();
+        return;
+    }
+
+    statusEl.textContent = "🟡 กำลังโหลดข้อมูลล่าสุดจากคลาวด์...";
+
+    db.ref("eco_school_data").on("value", (snapshot) => {
+        const cloudData = snapshot.val();
+        
+        if (cloudData) {
+            students = cloudData.students || [];
+            historyLogs = cloudData.historyLogs || [];
+            
+            localStorage.setItem("students", JSON.stringify(students));
+            localStorage.setItem("historyLogs", JSON.stringify(historyLogs));
+            statusEl.textContent = "🟢 เชื่อมต่อสำเร็จ! โหลดข้อมูลล่าสุดเรียบร้อย";
+        } else {
+            loadLocalData();
+            statusEl.textContent = "🟢 เชื่อมต่อแล้ว (กำลังส่งข้อมูลเดิมขึ้นคลาวด์)";
+            saveData();
+        }
+
+        showStudents();
+        showHistory();
+    }, (error) => {
+        statusEl.textContent = "⚠️ ไม่สามารถเชื่อมต่อคลาวด์ได้: " + error.message;
+        console.error("Realtime Error: ", error);
+        loadLocalData();
+        showStudents();
+        showHistory();
+    });
+}
+
+function loadLocalData() {
+    try {
+        students = JSON.parse(localStorage.getItem("students")) || [];
+        historyLogs = JSON.parse(localStorage.getItem("historyLogs")) || [];
+    } catch(e) {
+        students = [];
+        historyLogs = [];
+    }
+}
+
+function loadRooms() {
+    const rSelect = document.getElementById("roomSelect");
+    const sFilter = document.getElementById("studentRoomFilter");
+    const hFilter = document.getElementById("historyRoomFilter");
+    
+    if (rSelect) {
+        rSelect.innerHTML = '<option value="">เลือกห้องเรียน</option>';
+        rooms.forEach(room => {
+            const option = document.createElement("option");
+            option.value = room;
+            option.textContent = room;
+            rSelect.appendChild(option);
+        });
+    }
+
+    if (sFilter) {
+        sFilter.innerHTML = '<option value="all">แสดงทุกห้อง</option>';
+        rooms.forEach(room => {
+            const option = document.createElement("option");
+            option.value = room;
+            option.textContent = room;
+            sFilter.appendChild(option);
+        });
+    }
+
+    if (hFilter) {
+        hFilter.innerHTML = '<option value="all">แสดงทุกห้อง</option>';
+        rooms.forEach(room => {
+            const option = document.createElement("option");
+            option.value = room;
+            option.textContent = room;
+            hFilter.appendChild(option);
+        });
+    }
+}
+
+function addStudent() {
+    const rSelect = document.getElementById("roomSelect");
+    const sName = document.getElementById("studentName");
+    
+    const room = rSelect.value;
+    const name = sName.value.trim();
+
+    if (room === "" || name === "") {
+        alert("กรุณาเลือกห้องและกรอกชื่อให้ครบถ้วน");
+        return;
+    }
+
+    students.push({
+        room: room,
+        name: name,
+        bottle: 0,
+        can: 0,
+        point: 0
+    });
+
+    sName.value = "";
+    saveData();
+}
+
+function showStudents() {
+    const sTable = document.getElementById("studentTable");
+    const sFilter = document.getElementById("studentRoomFilter");
+    const nameSearch = document.getElementById("studentNameSearch");
+
+    if (!sTable) return;
+    sTable.innerHTML = "";
+    
+    const selectedRoom = sFilter ? sFilter.value : "all";
+    const keyword = nameSearch ? nameSearch.value.trim().toLowerCase() : "";
+
+    let hasMatch = false;
+
+    students.forEach((student, index) => {
+        const matchRoom = (selectedRoom === "all" || student.room === selectedRoom);
+        const matchName = student.name.toLowerCase().includes(keyword);
+
+        if (matchRoom && matchName) {
+            hasMatch = true;
+            const row = document.createElement("tr");
+            row.innerHTML = `
+            <td>${student.room}</td>
+            <td>${student.name}</td>
+            <td>${student.bottle}</td>
+            <td>${student.can}</td>
+            <td style="font-weight:bold; color:#2e7d32;">${student.point}</td>
+            <td>
+                <button class="blue actionBtn" onclick="addBottle(${index})">+🧴</button>
+                <button class="orange actionBtn" onclick="addCan(${index})">+🥫</button>
+                <button class="purple actionBtn" onclick="openRewardModal(${index})">🎁 แลกรางวัล</button>
+                <button class="red actionBtn" onclick="deleteStudent(${index})">🗑️</button>
+            </td>
+            `;
+            sTable.appendChild(row);
+        }
+    });
+
+    if (!hasMatch) {
+        sTable.innerHTML = `<tr><td colspan="6">ไม่พบรายชื่อนักเรียนตามเงื่อนไขที่ค้นหา</td></tr>`;
+    }
+}
+
+function showHistory() {
+    const hTable = document.getElementById("historyTable");
+    const hFilter = document.getElementById("historyRoomFilter");
+    const nameSearch = document.getElementById("historyNameSearch");
+    
+    if (!hTable || !hFilter) return;
+    hTable.innerHTML = "";
+    
+    const selectedRoom = hFilter.value;
+    const keyword = nameSearch ? nameSearch.value.trim().toLowerCase() : "";
+    
+    const filteredLogs = historyLogs.filter(log => {
+        const matchRoom = (selectedRoom === "all" || log.room === selectedRoom);
+        const matchName = log.name.toLowerCase().includes(keyword);
+        return matchRoom && matchName;
+    });
+
+    if (filteredLogs.length === 0) {
+        hTable.innerHTML = `<tr><td colspan="5">ไม่พบประวัติการแลกรางวัลตามเงื่อนไขที่ค้นหา</td></tr>`;
+        return;
+    }
+    
+    [...filteredLogs].reverse().forEach(log => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${log.datetime}</td>
+            <td>${log.room}</td>
+            <td>${log.name}</td>
+            <td>${log.rewardName}</td>
+            <td style="color:#e53935; font-weight:bold;">-${log.cost}</td>
+        `;
+        hTable.appendChild(row);
+    });
+}
+
+function addBottle(index){
+    students[index].bottle++;
+    students[index].point += 1;
+    saveData();
+}
+
+function addCan(index){
+    students[index].can++;
+    students[index].point += 3;
+    saveData();
+}
+
+function deleteStudent(index){
+    if(confirm("ต้องการลบสมาชิกใช่หรือไม่?")){
+        students.splice(index,1);
+        saveData();
+    }
+}
+
+function openRewardModal(index) {
+    activeStudentIndex = index;
+    const student = students[index];
+    document.getElementById("modalTitle").textContent = `🎁 แลกรางวัลให้: ${student.name} (${student.room})`;
+    document.getElementById("currentPoints").textContent = student.point;
+    
+    const grid = document.getElementById("rewardSelectGrid");
+    grid.innerHTML = "";
+    
+    rewards.forEach(reward => {
+        const btn = document.createElement("button");
+        btn.className = "reward-btn";
+        btn.innerHTML = `${reward.name}<br><small>${reward.cost} แต้ม</small>`;
+        btn.onclick = () => redeemReward(reward.name, reward.cost);
+        grid.appendChild(btn);
+    });
+    
+    document.getElementById("rewardModal").style.display = "flex";
+}
+
+function closeModal() {
+    document.getElementById("rewardModal").style.display = "none";
+    activeStudentIndex = null;
+}
+
+function redeemReward(rewardName, cost) {
+    const student = students[activeStudentIndex];
+    
+    if (student.point < cost) {
+        alert(`❌ แต้มไม่พอ! ${student.name} มีเพียง ${student.point} แต้ม (ขาดอีก ${cost - student.point} แต้ม)`);
+        return;
+    }
+    
+    if (confirm(`คุณต้องการใช้ ${cost} แต้ม เพื่อแลก "${rewardName}" ใช่หรือไม่?`)) {
+        student.point -= cost;
+        
+        const now = new Date();
+        const datetimeStr = `${now.toLocaleDateString('th-TH')} ${now.toLocaleTimeString('th-TH', {hour: '2-digit', minute:'2-digit'})}`;
+        
+        historyLogs.push({
+            datetime: datetimeStr,
+            room: student.room,
+            name: student.name,
+            rewardName: rewardName,
+            cost: cost
+        });
+        
+        saveData();
+        closeModal();
+        
+        alert(`🎉 แลกรางวัลสำเร็จ! แต้มคงเหลือปัจจุบัน: ${student.point} แต้ม`);
+    }
+}
+
+function exportData() {
+    const dataObj = {
+        students: students,
+        historyLogs: historyLogs
+    };
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dataObj, null, 2));
+    const downloadAnchor = document.createElement('a');
+    downloadAnchor.setAttribute("href", dataStr);
+    downloadAnchor.setAttribute("download", `eco_recycle_backup_${new Date().toISOString().slice(0,10)}.json`);
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    downloadAnchor.remove();
+}
+
+function importData(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const importedData = JSON.parse(e.target.result);
+            if (importedData.students && Array.isArray(importedData.students)) {
+                students = importedData.students;
+                historyLogs = importedData.historyLogs || [];
+                saveData();
+                alert("🟢 นำเข้าข้อมูลสำเร็จเรียบร้อย!");
+            } else {
+                alert("❌ รูปแบบไฟล์ไม่ถูกต้อง");
+            }
+        } catch(err) {
+            alert("❌ อ่านไฟล์ไม่สำเร็จ กรุณาตรวจสอบไฟล์ที่นำเข้า");
+        }
+    };
+    reader.readAsText(file);
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    loadRooms();
+    initRealtimeSync();
+});
+</script>
+
+</body>
+</html>
